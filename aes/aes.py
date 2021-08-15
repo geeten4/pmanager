@@ -1,13 +1,22 @@
 from aes.state import State
 from aes.key_expansion import key_expansion
 
+# main file containing AES encrypt and decrypt methods 
+
+# algorithm constructed and tested as described in
+# https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
+# and on wiki
+# https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
 
 def encrypt(input: str, cipher_key: str) -> str:
-    
+    """AES encrypt, given input and cipher_key as 128-bit hex number"""
+
+    # generate round keys
     Nk = 11
     key = State(number=cipher_key)
     round_keys = key_expansion(key, Nk)
-    
+
+    # add first round key
     state = State(number=input)
     state ^= round_keys[0]
 
@@ -25,6 +34,8 @@ def encrypt(input: str, cipher_key: str) -> str:
     return state.to_hex_str()
 
 def decrypt(hash: str, cipher_key: str) -> str:
+    """AES decrypt, given input and cipher_key as 128-bit hex number"""
+
     Nk = 11
     key = State(number=cipher_key)
     round_keys = key_expansion(key, Nk)
